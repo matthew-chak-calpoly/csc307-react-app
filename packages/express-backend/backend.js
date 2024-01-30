@@ -58,9 +58,16 @@ const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
 const removeUserById = (id) => {
-    const newUsers = users["users_list"].filter((user) => user["id"] !== id);
-    users["users_list"] = newUsers;
-    return { deleted: id };
+  if (findUserById(id) === undefined) {
+    return false;
+  }
+  const newUsers = users["users_list"].filter((user) => user["id"] !== id);
+  users["users_list"] = newUsers;
+  return true;
+}
+
+function generateId(){
+    return Math.random().toString(36).substr(2, 9);
 }
 
 app.get("/users", (req, res) => {
@@ -88,8 +95,9 @@ app.get("/users", (req, res) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
+  userToAdd["id"] = generateId();
   addUser(userToAdd);
-  res.send();
+  res.status(201).send(userToAdd);
 });
 
 app.get("/users/:id", (req, res) => {
@@ -104,8 +112,7 @@ app.get("/users/:id", (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
     const id = req.params["id"];
-    const result = removeUserById(id);
-    res.send(result);
+    res.status(removeUserById(id) ? 204 : 404).send();
 })
 
 app.listen(port, () => {
