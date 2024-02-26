@@ -31,7 +31,7 @@ app.get("/users/:id", (req, res) => {
   const id = req.params["id"]; //or req.params.id
   userServices.findUserById(id)
     .then((user) => res.send(user))
-    .catch((error) => res.status(404).send(error));
+    .catch((error) => res.status(404).send({error: "User not found"}));
 });
 
 app.delete("/users/:id", (req, res) => {
