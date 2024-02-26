@@ -8,7 +8,7 @@ function MyApp() {
   async function removeOneCharacter(index) {
     const character = characters[index];
     try{
-      const deleteResp = await fetch(`http://localhost:8000/users/${character.id}`, {
+      const deleteResp = await fetch(`http://localhost:8000/users/${character._id}`, {
         method: "DELETE",
       });
       if (deleteResp.status === 204){
